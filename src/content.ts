@@ -20,8 +20,8 @@ export const layers: Layer[] = [
   { id: 'reel', title: 'Frames that move', tag: 'showreel / 2026', video: '/assets/videos/frames-that-move.mp4', label: '#9b5cff', start: 0, duration: 7 },
   { id: 'humain', title: 'HUMAIN', tag: 'brand motion / ai', video: '/assets/videos/humain.mp4', poster: '/assets/posters/humain.jpg', label: '#2ee6b0', start: 6, duration: 7 },
   { id: 'solaire', title: 'Solaire', tag: 'social edit / vertical', video: '/assets/videos/solaire.mp4', poster: '/assets/posters/solaire.jpg', label: '#ff6ad5', start: 12, duration: 6 },
-  { id: 'business', title: 'Business Systems', tag: 'explainer / visual system', video: '/assets/videos/business-motion.mp4', poster: '/assets/posters/business.jpg', label: '#3d9bff', start: 17, duration: 7 },
-  { id: 'chf', title: 'CHF Motion', tag: 'motion study / compositing', video: '/assets/videos/chf-motion.mp4', poster: '/assets/posters/chf.jpg', label: '#f2c94c', start: 23, duration: 7 },
+  { id: 'business', title: 'Surmount', tag: 'explainer / visual system', video: '/assets/videos/business-motion.mp4', poster: '/assets/posters/business.jpg', label: '#3d9bff', start: 17, duration: 7 },
+  { id: 'chf', title: 'BestClip.io', tag: 'motion study / compositing', video: '/assets/videos/chf-motion.mp4', poster: '/assets/posters/chf.jpg', label: '#f2c94c', start: 23, duration: 7 },
 ]
 
 export const profile = {
@@ -31,6 +31,7 @@ export const profile = {
   hero: '/assets/profile/kenjie-hero.jpg',
   card: '/assets/profile/kenjie-profile.jpg',
   avatar: '/assets/profile/kenjie-avatar.jpg',
+  circle: '/assets/profile/kenjie-circle.jpg',
 }
 
 export const clients = [
@@ -49,5 +50,9 @@ export const skills = [
 
 export const links = {
   portfolio: 'https://drive.google.com/drive/folders/1ICj09iPZ1IZwO2lqayA-v56-MY_jdOrr',
-  email: 'hello@ken.visuals',
+  email: 'kenjievillacorta24@gmail.com',
+  instagram: 'ken.villacorta',
+  /** Local PH format for display; wa.me needs it in international form. */
+  whatsapp: '09497027995',
+  whatsappIntl: '639497027995',
 }

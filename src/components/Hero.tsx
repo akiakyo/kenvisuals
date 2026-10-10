@@ -1,14 +1,13 @@
-import { lazy, Suspense } from 'react'
-import { links } from '../content'
+import { links, profile } from '../content'
 import { Icon, type IconName } from './Icons'
 import { AfterEffectsLogo, FigmaLogo } from './Logos'
 import BlurText from './reactbits/BlurText/BlurText'
 import CountUp from './reactbits/CountUp/CountUp'
 import RotatingText from './reactbits/RotatingText/RotatingText'
+import SideRays from './reactbits/SideRays/SideRays'
 import SplitText from './reactbits/SplitText/SplitText'
 import { Cta } from './ui'
-
-const Scene = lazy(() => import('./Scene'))
+import { ArrowDownRight, ArrowUpRight } from 'lucide-react'
 
 const lede = 'I design motion that gives brands a pulse — clean visuals, sharp rhythm, and movement built to be remembered.'
 const tools: IconName[] = ['home', 'select', 'hand', 'zoom', 'pen', 'text', 'rect', 'move']
@@ -49,11 +48,10 @@ function Decor() {
 export default function Hero({ ready }: { ready: boolean }) {
   return (
     <section className="hero" id="top">
-      <Decor />
-      <div className="hero-canvas" aria-hidden="true">
-        <Suspense fallback={null}><Scene /></Suspense>
+      <div className="hero-rays" aria-hidden="true">
+        <SideRays origin="top-right" rayColor1="#ffffff" rayColor2="#ffc4f0" speed={1.6} intensity={1.6} spread={2.2} saturation={1.1} blend={0.6} falloff={1.4} opacity={0.85} />
       </div>
-
+      <Decor />
       <div className="hero-copy">
         <div className="eyebrow reveal">
           <span className="status-dot" /> available for
@@ -73,22 +71,31 @@ export default function Hero({ ready }: { ready: boolean }) {
 
         {/* Mounted once the boot screen lifts so the entrance is actually seen. */}
         <h1 className="hero-title" aria-label="Kenjie Villacorta">
-          {ready ? (
-            <>
-              <SplitText text="KENJIE" tag="span" className="hero-line" splitType="chars" delay={45} duration={1.1} ease="power4.out" from={{ opacity: 0, y: 120, rotateX: -80 }} to={{ opacity: 1, y: 0, rotateX: 0 }} textAlign="left" rootMargin="0px" />
-              <br />
-              <SplitText text="VILLACORTA" tag="span" className="hero-line dark" splitType="chars" delay={40} duration={1.1} ease="power4.out" from={{ opacity: 0, y: 120, rotateX: -80 }} to={{ opacity: 1, y: 0, rotateX: 0 }} textAlign="left" rootMargin="0px" />
-            </>
-          ) : (
-            <span className="hero-line" style={{ visibility: 'hidden' }}>KENJIE<br />VILLACORTA</span>
-          )}
+          <span className="hero-name">
+            {ready ? (
+              <>
+                <SplitText text="KENJIE" tag="span" className="hero-line" splitType="chars" delay={45} duration={1.1} ease="power4.out" from={{ opacity: 0, y: 120, rotateX: -80 }} to={{ opacity: 1, y: 0, rotateX: 0 }} textAlign="left" rootMargin="0px" />
+                <br />
+                <SplitText text="VILLACORTA" tag="span" className="hero-line dark" splitType="chars" delay={40} duration={1.1} ease="power4.out" from={{ opacity: 0, y: 120, rotateX: -80 }} to={{ opacity: 1, y: 0, rotateX: 0 }} textAlign="left" rootMargin="0px" />
+              </>
+            ) : (
+              <span className="hero-line" style={{ visibility: 'hidden' }}>KENJIE<br />VILLACORTA</span>
+            )}
+          </span>
+          {/* His photo as a selected AE layer: bounding box and transform handles. */}
+          <span className={`hero-photo${ready ? ' in' : ''}`}>
+            <img src={profile.circle} alt="" width={600} height={600} />
+            <span className="layer-box" aria-hidden="true">
+              {['tl', 't', 'tr', 'r', 'br', 'b', 'bl', 'l'].map((h) => <i key={h} className={`h-${h}`} />)}
+            </span>
+          </span>
         </h1>
 
         {ready ? <BlurText text={lede} className="hero-lede" animateBy="words" delay={35} stepDuration={0.3} direction="bottom" /> : <p className="hero-lede" style={{ visibility: 'hidden' }}>{lede}</p>}
 
         <div className="hero-actions reveal">
-          <Cta href="#work">open the timeline <b>↘</b></Cta>
-          <Cta href={links.portfolio} variant="ghost" external>full portfolio <b>↗</b></Cta>
+          <Cta href="#work">open the timeline <b><ArrowDownRight size={14} strokeWidth={2.25} /></b></Cta>
+          <Cta href={links.portfolio} variant="ghost" external>full portfolio <b><ArrowUpRight size={14} strokeWidth={2.25} /></b></Cta>
         </div>
       </div>
 

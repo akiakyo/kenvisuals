@@ -6,6 +6,7 @@ import Panel from './Panel'
 import GlareHover from './reactbits/GlareHover/GlareHover'
 import ProfileCard from './reactbits/ProfileCard/ProfileCard'
 import { Cta, Heading, Kicker } from './ui'
+import { ArrowUpRight, Check } from 'lucide-react'
 
 /** An AE property row whose value can be scrubbed by dragging, like After Effects' blue numbers. */
 function ScrubProperty({ name, initial }: { name: string; initial: number }) {
@@ -115,7 +116,7 @@ export function Clients() {
               >
                 <img src={c.logo} alt={`${c.name} logo`} className={c.invert ? 'invert' : undefined} />
               </GlareHover>
-              <div className="client-meta"><span>{c.name}</span><small>{c.role}</small><b>↗</b></div>
+              <div className="client-meta"><span>{c.name}</span><small>{c.role}</small><b><ArrowUpRight size={14} strokeWidth={2.25} /></b></div>
             </a>
           ))}
         </div>
@@ -135,7 +136,7 @@ export function Contact() {
       <Panel title="Render Queue" className="render-panel reveal">
         <div className="rq-head"><span>Render</span><span>#</span><span>Comp Name</span><span>Status</span></div>
         <div className="rq-row">
-          <span className="check on" aria-hidden="true" />
+          <span className="check on" aria-hidden="true"><Check size={11} strokeWidth={3} /></span>
           <span>1</span>
           <span className="rq-comp">Your Next Project</span>
           <span className="rq-status">Queued</span>
@@ -146,7 +147,7 @@ export function Contact() {
           <div><dt>Output To</dt><dd>{links.email}</dd></div>
         </dl>
         <div className="rq-actions">
-          <Cta href={`mailto:${links.email}`}>Render <b>↗</b></Cta>
+          <Cta href={`mailto:${links.email}`}>Render <b><ArrowUpRight size={14} strokeWidth={2.25} /></b></Cta>
         </div>
       </Panel>
     </section>

@@ -2,7 +2,9 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { COMP_DURATION, FPS, layers as initialLayers, type Layer } from '../content'
 import { Icon } from './Icons'
 import Panel from './Panel'
+import { sfx } from '../sfx'
 import { Heading, Kicker } from './ui'
+import { ArrowLeft, ArrowRight } from 'lucide-react'
 
 type LayerState = Layer & { visible: boolean }
 type Open = (src: string, title: string) => void
@@ -59,14 +61,38 @@ export default function Timeline({ onOpen }: { onOpen: Open }) {
   const active = useMemo(() => items.find((l) => l.visible && t >= l.start && t < l.start + l.duration), [items, t])
   const sel = items.find((l) => l.id === selected)
 
-  // Playback clock.
+  const activeRef = useRef(active)
+  activeRef.current = active
+
+  // Playback clock. While a layer is on screen its video is the master clock, so the
+  // playhead waits for buffering instead of racing ahead and forcing stuttery seeks.
   useEffect(() => {
     if (!playing) return
     let raf = 0
     let last = performance.now()
+    let lastVideo: HTMLVideoElement | null = null
+    let lastVideoTime = 0
+    let stalled = 0
     const tick = (now: number) => {
-      const next = tRef.current + (now - last) / 1000
+      const wall = (now - last) / 1000
       last = now
+      const v = activeRef.current ? videoRef.current : null
+      let dt = wall
+      if (v && v === lastVideo && !v.seeking) {
+        if (v.paused || v.readyState < 3) {
+          // Hold for buffering, but never freeze the playhead for good.
+          stalled += wall
+          dt = stalled > 1.5 ? wall : 0
+        } else {
+          stalled = 0
+          dt = v.currentTime - lastVideoTime
+          if (dt < 0) dt += v.duration || 0 // video looped
+          if (dt < 0 || dt > 0.25) dt = wall
+        }
+      }
+      lastVideo = v
+      lastVideoTime = v?.currentTime ?? 0
+      const next = tRef.current + dt
       setT(next >= COMP_DURATION ? 0 : next)
       raf = requestAnimationFrame(tick)
     }
@@ -160,7 +186,11 @@ export default function Timeline({ onOpen }: { onOpen: Open }) {
     const at = (x: number) => clamp(frame(((x - rect.left) / rect.width) * COMP_DURATION), 0, COMP_DURATION - 1 / FPS)
     setPlaying(false)
     setT(at(e.clientX))
-    drag(e, (_dx, _dy, ev) => setT(at(ev.clientX)))
+    drag(e, (_dx, _dy, ev) => {
+      const next = at(ev.clientX)
+      if (next !== tRef.current) sfx.tick()
+      setT(next)
+    })
   }
 
   const nudge = (layer: LayerState, frames: number) =>
@@ -223,7 +253,7 @@ export default function Timeline({ onOpen }: { onOpen: Open }) {
             <Icon name="expand" size={14} /> Open {sel?.title}
           </button>
           <p className="hint">
-            <b>Space</b> play · <b>Home</b> to start · <b>←/→</b> nudge a layer a frame (<b>Shift</b> = 10)
+            <b>Space</b> play · <b>Home</b> to start · <b className="kbd-arrows"><ArrowLeft size={11} strokeWidth={2.5} />/<ArrowRight size={11} strokeWidth={2.5} /></b> nudge a layer a frame (<b>Shift</b> = 10)
           </p>
         </Panel>
 
